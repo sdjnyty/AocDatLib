@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseZone.cs" />
+    <Compile Include="Civilization.cs" />
     <Compile Include="DatFile.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Graphic.cs" />
@@ -64,6 +65,9 @@
     <Compile Include="TerrainPassGraphic.cs" />
     <Compile Include="TerrainRestriction.cs" />
     <Compile Include="TileSize.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="UnitBase.cs" />
+    <Compile Include="UnitCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

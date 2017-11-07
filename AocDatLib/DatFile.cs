@@ -41,15 +41,15 @@ namespace YTY.AocDatLib
 
     private int _unknown3;
 
-    public float MapMinX { get; set; } 
+    public float MapMinX { get; set; }
     public float MapMinY { get; set; }
-        public float MapMaxX { get; set; }
+    public float MapMaxX { get; set; }
     public float MapMaxY { get; set; }
     public float MapMaxXPlus1 { get; set; }
     public float MapMaxYPlus1 { get; set; }
     public ushort TerrainCountAdditional { get; set; }
     public ushort BordersUsed { get; set; }
-public short MaxTerrain { get; set; }
+    public short MaxTerrain { get; set; }
     public short TileWidth { get; set; }
     public short TileHeight { get; set; }
     public short TileHalfHeight { get; set; }
@@ -70,6 +70,8 @@ public short MaxTerrain { get; set; }
     internal uint[] TerrainBlob1 { get; set; }
     public List<MapHeader> MapHeaders { get; }
     public List<Map> Maps { get; }
+    public List<Technology> Technologies { get; }
+    public List<Unit> Units { get; }
 
     public DatFile(string fileName)
     {
@@ -95,17 +97,17 @@ public short MaxTerrain { get; set; }
               pTerrainRestrictions1[i] = br.ReadInt32();
             }
             TerrainRestrictions = new List<TerrainRestriction>(nTerrainRestrictions);
-            for(var i = 0;i<nTerrainRestrictions;i++)
+            for (var i = 0; i < nTerrainRestrictions; i++)
             {
               var tr = new TerrainRestriction();
               TerrainRestrictions.Add(tr);
               tr.AccessibleDamageMultiplier = new List<float>(nTerrains);
-              for(var j=0;j<nTerrains;j++)
+              for (var j = 0; j < nTerrains; j++)
               {
                 tr.AccessibleDamageMultiplier.Add(br.ReadSingle());
               }
               tr.PassGraphics = new List<TerrainPassGraphic>(nTerrains);
-              for(var j=0;j<nTerrains;j++)
+              for (var j = 0; j < nTerrains; j++)
               {
                 var tpg = new TerrainPassGraphic();
                 tr.PassGraphics.Add(tpg);
@@ -117,7 +119,7 @@ public short MaxTerrain { get; set; }
             }
             var nPlayerColors = br.ReadUInt16();
             PlayerColors = new List<PlayerColor>(nPlayerColors);
-            for(var i=0;i<nPlayerColors;i++)
+            for (var i = 0; i < nPlayerColors; i++)
             {
               var pc = new PlayerColor();
               PlayerColors.Add(pc);
@@ -133,7 +135,7 @@ public short MaxTerrain { get; set; }
             }
             var nSounds = br.ReadUInt16();
             Sounds = new List<Sound>(nSounds);
-            for(var i=0;i<nSounds;i++)
+            for (var i = 0; i < nSounds; i++)
             {
               var s = new Sound();
               Sounds.Add(s);
@@ -155,14 +157,14 @@ public short MaxTerrain { get; set; }
             }
             var nGraphics = br.ReadUInt16();
             var pGraphics = new uint[nGraphics];
-            for(var i=0;i<nGraphics;i++)
+            for (var i = 0; i < nGraphics; i++)
             {
               pGraphics[i] = br.ReadUInt32();
             }
             Graphics = new List<Graphic>(nGraphics);
-            for(var i=0;i<nGraphics;i++)
+            for (var i = 0; i < nGraphics; i++)
             {
-              if(pGraphics[i]==0)
+              if (pGraphics[i] == 0)
               {
                 continue;
               }
@@ -195,7 +197,7 @@ public short MaxTerrain { get; set; }
               g.MirroringMode = br.ReadSByte();
               g.Unknown3 = br.ReadByte();
               g.Deltas = new List<GraphicDelta>(nDeltas);
-              for(var j=0;j<nDeltas;j++)
+              for (var j = 0; j < nDeltas; j++)
               {
                 var d = new GraphicDelta();
                 g.Deltas.Add(d);
@@ -208,7 +210,7 @@ public short MaxTerrain { get; set; }
                 d.Unknown4 = br.ReadInt16();
                 d.Unknown5 = br.ReadInt16();
               }
-              if(g.AttackSoundUsed>0)
+              if (g.AttackSoundUsed > 0)
               {
                 g.AttackSounds = new List<GraphicAttackSound>(g.AngleCount);
                 for (var j = 0; j < g.AngleCount; j++)
@@ -230,7 +232,7 @@ public short MaxTerrain { get; set; }
             _mapHeight = br.ReadInt32();
             _worldWidth = br.ReadInt32();
             _worldHeight = br.ReadInt32();
-            for(var i = 0; i < TILESIZECOUNT;i++)
+            for (var i = 0; i < TILESIZECOUNT; i++)
             {
               var ts = new TileSize();
               TileSizes[i] = ts;
@@ -240,7 +242,7 @@ public short MaxTerrain { get; set; }
             }
             _unknown2 = br.ReadInt16();
             Terrains = new Terrain[GetTerrainCount()];
-            for(var i=0;i<GetTerrainCount();i++)
+            for (var i = 0; i < GetTerrainCount(); i++)
             {
               var t = new Terrain();
               Terrains[i] = t;
@@ -260,8 +262,8 @@ public short MaxTerrain { get; set; }
               t.CliffColorRight = br.ReadByte();
               t.Passable = br.ReadSByte();
               t.Impassable = br.ReadSByte();
-              t.Animation.BinaryReaderRead( br);
-              for(var j=0;j<Terrain.TILEGRAPHICSCOUNT;j++)
+              t.Animation.BinaryReaderRead(br);
+              for (var j = 0; j < Terrain.TILEGRAPHICSCOUNT; j++)
               {
                 var tf = new TerrainFrame();
                 t.TileGraphics[j] = tf;
@@ -271,11 +273,11 @@ public short MaxTerrain { get; set; }
               t.Dimension0 = br.ReadInt16();
               t.Dimension1 = br.ReadInt16();
               t.Borders = new short[GetTerrainCount()];
-              for(var j=0;j<GetTerrainCount();j++)
+              for (var j = 0; j < GetTerrainCount(); j++)
               {
                 t.Borders[j] = br.ReadInt16();
               }
-              for(var j=0;j<Terrain.TerrainUnitCount;j++)
+              for (var j = 0; j < Terrain.TerrainUnitCount; j++)
               {
                 t.UnitIds[j] = br.ReadInt16();
               }
@@ -290,7 +292,7 @@ public short MaxTerrain { get; set; }
               t.TerrainUnitsUsedCount = br.ReadInt16();
               t.Unknown3 = br.ReadUInt16();
             }
-            for(var i=0;i<TerrainBorderCount;i++)
+            for (var i = 0; i < TerrainBorderCount; i++)
             {
               var b = new TerrainBorder();
               TerrainBorders[i] = b;
@@ -305,7 +307,7 @@ public short MaxTerrain { get; set; }
               b.ColorMed = br.ReadByte();
               b.ColorLow = br.ReadByte();
               b.Animation.BinaryReaderRead(br);
-              for(var j=0;j<b.Frames.Length;j++)
+              for (var j = 0; j < b.Frames.Length; j++)
               {
                 b.Frames[j] = new TerrainFrame();
                 b.Frames[j].BinaryReaderRead(br);
@@ -342,14 +344,14 @@ public short MaxTerrain { get; set; }
             FogFlag = br.ReadSByte();
             TerrainBlob0 = br.ReadBytes(21);
             TerrainBlob1 = new uint[157];
-            for(var i=0;i<157;i++)
+            for (var i = 0; i < 157; i++)
             {
               TerrainBlob1[i] = br.ReadUInt32();
             }
             var nRandomMaps = br.ReadUInt32();
             var pRandomMaps = br.ReadUInt32();
             MapHeaders = new List<MapHeader>((int)nRandomMaps);
-            for(var i=0;i<nRandomMaps;i++)
+            for (var i = 0; i < nRandomMaps; i++)
             {
               var mh = new MapHeader();
               MapHeaders.Add(mh);
@@ -373,7 +375,7 @@ public short MaxTerrain { get; set; }
               mh._unknown3 = br.ReadInt32();
             }
             Maps = new List<Map>((int)nRandomMaps);
-            for(var i=0;i<nRandomMaps;i++)
+            for (var i = 0; i < nRandomMaps; i++)
             {
               var m = new Map();
               Maps.Add(m);
@@ -389,7 +391,7 @@ public short MaxTerrain { get; set; }
               var nBaseZones = br.ReadInt32();
               m.BaseZonePtr = br.ReadInt32();
               m.BaseZones = new List<BaseZone>(nBaseZones);
-              for(var j=0;j<nBaseZones;j++)
+              for (var j = 0; j < nBaseZones; j++)
               {
                 var bz = new BaseZone();
                 m.BaseZones.Add(bz);
@@ -412,10 +414,10 @@ public short MaxTerrain { get; set; }
               var nMapTerrains = br.ReadInt32();
               m.MapTerrainPtr = br.ReadInt32();
               m.MapTerrains = new List<MapTerrain>(nMapTerrains);
-              for(var j=0;j<nMapTerrains;j++)
+              for (var j = 0; j < nMapTerrains; j++)
               {
                 var mt = new MapTerrain();
-                m.MapTerrains.Add( mt);
+                m.MapTerrains.Add(mt);
                 mt.Proportion = br.ReadInt32();
                 mt.Terrain = br.ReadInt32();
                 mt.ClumpCount = br.ReadInt32();
@@ -426,7 +428,7 @@ public short MaxTerrain { get; set; }
               var nMapUnits = br.ReadInt32();
               m.MapUnitPtr = br.ReadInt32();
               m.MapUnits = new List<MapUnit>(nMapUnits);
-              for(var j=0;j<nMapUnits;j++)
+              for (var j = 0; j < nMapUnits; j++)
               {
                 var mu = new MapUnit();
                 m.MapUnits.Add(mu);
@@ -447,10 +449,10 @@ public short MaxTerrain { get; set; }
               var nMapElevations = br.ReadInt32();
               m.MapElevationPtr = br.ReadInt32();
               m.MapElevations = new List<MapElevation>(nMapElevations);
-              for(var j=0;j<nMapElevations;j++)
+              for (var j = 0; j < nMapElevations; j++)
               {
                 var me = new MapElevation();
-                m.MapElevations.Add( me);
+                m.MapElevations.Add(me);
                 me.Proportion = br.ReadInt32();
                 me.Terrain = br.ReadInt32();
                 me.ClumpCount = br.ReadInt32();
@@ -460,7 +462,71 @@ public short MaxTerrain { get; set; }
               }
             }
             var nTechs = br.ReadInt32();
-            
+            Technologies = new List<Technology>(nTechs);
+            for (var i = 0; i < nTechs; i++)
+            {
+              var t = new Technology();
+              Technologies.Add(t);
+              t.Name = br.ReadChars(31);
+              var nEffects = br.ReadUInt16();
+              t.Effects = new List<Effect>(nEffects);
+              for (var j = 0; j < nEffects; j++)
+              {
+                var e = new Effect();
+                t.Effects.Add(e);
+                e.Command = br.ReadSByte();
+                e.Arg1 = br.ReadInt16();
+                e.Arg2 = br.ReadInt16();
+                e.Arg3 = br.ReadInt16();
+                e.Arg4 = br.ReadSingle();
+              }
+            }
+            var nUnits = br.ReadInt32();
+            Units = new List<Unit>(nUnits);
+            for (var i = 0; i < nUnits; i++)
+            {
+              var exists = br.ReadSByte();
+              if (exists == 0) continue;
+              var u = new Unit();
+              Units.Add(u);
+              var nCommands = br.ReadUInt16();
+              u.Commands = new List<UnitCommand>(nCommands);
+              for(var j=0;j<nCommands;j++)
+              {
+                var c = new UnitCommand();
+                u.Commands.Add(c);
+                c.CommandUsed = br.ReadInt16();
+                c.Id = br.ReadInt16();
+                c._unknown1 = br.ReadByte();
+                c.Kind = br.ReadInt16();
+                c.ClassId = br.ReadInt16();
+                c.UnitId = br.ReadInt16();
+                c.TerrainId = br.ReadInt16();
+                c.Attr1 = br.ReadInt16();
+                c.Attr2 = br.ReadInt16();
+                c.Attr3 = br.ReadInt16();
+                c.Attr4 = br.ReadInt16();
+                c.WorkValue1 = br.ReadSingle();
+                c.WorkValue2 = br.ReadSingle();
+                c.WorkRange = br.ReadSingle();
+                c.SearchMode = br.ReadByte();
+                c.SearchTime = br.ReadSingle();
+                c.CombatLevel = br.ReadByte();
+                c.CombatMode = br.ReadByte();
+                c.WorkMode1 = br.ReadInt16();
+                c.WorkMode2 = br.ReadInt16();
+                c.OwnerKind = br.ReadByte();
+                c.HoldingMode = br.ReadByte();
+                c.StateBuild = br.ReadByte();
+                c.MoveSpriteId = br.ReadInt16();
+                c.WorkSpriteId1 = br.ReadInt16();
+                c.WorkSpriteId2 = br.ReadInt16();
+                c.CarrySpriteId = br.ReadInt16();
+                c.WorkSoundId1 = br.ReadInt16();
+                c.WorkSoundId2 = br.ReadInt16();
+              }
+            }
+            var nCivs = br.ReadUInt16();
             Console.WriteLine(ms.Position);
           }
         }
@@ -469,7 +535,7 @@ public short MaxTerrain { get; set; }
 
     private int GetTerrainCount()
     {
-      switch(new string(_version).Trim('\0'))
+      switch (new string(_version).Trim('\0'))
       {
         case "VER 5.7":
           return 32;
