@@ -49,11 +49,13 @@
     <Compile Include="Civilization.cs" />
     <Compile Include="DamageGraphic.cs" />
     <Compile Include="DatFile.cs" />
+    <Compile Include="DecorationUnit.cs" />
+    <Compile Include="DoppelgangerUnit.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Graphic.cs" />
     <Compile Include="GraphicAttackSound.cs" />
     <Compile Include="GraphicDelta.cs" />
-    <Compile Include="LivingUnit.cs" />
+    <Compile Include="CombatUnit.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapElevation.cs" />
     <Compile Include="MapHeader.cs" />
@@ -62,7 +64,7 @@
     <Compile Include="MovingUnit.cs" />
     <Compile Include="PlayerColor.cs" />
     <Compile Include="ProjectileUnit.cs" />
-    <Compile Include="BattleUnitBase.cs" />
+    <Compile Include="CombatUnitBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sound.cs" />
     <Compile Include="SoundItem.cs" />

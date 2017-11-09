@@ -72,6 +72,7 @@ namespace YTY.AocDatLib
     public List<Map> Maps { get; }
     public List<Technology> Technologies { get; }
     public List<Unit> Units { get; }
+    public List<Civilization> Civilizations { get; }
 
     public DatFile(string fileName)
     {
@@ -527,6 +528,39 @@ namespace YTY.AocDatLib
               }
             }
             var nCivs = br.ReadUInt16();
+            Civilizations = new List<Civilization>(nCivs);
+            for(var i=0;i<nCivs;i++)
+            {
+              var c = new Civilization();
+              Civilizations.Add(c);
+              c.Enabled = br.ReadByte();
+              c.Name = br.ReadChars(20);
+              var nResources = br.ReadUInt16();
+              c.TechTreeId = br.ReadInt16();
+              c.TeamBonusId = br.ReadInt16();
+              c.Resources = new List<float>(nResources);
+              for(var j=0;j<nResources;j++)
+              {
+                c.Resources.Add(br.ReadSingle());
+              }
+              c.IconSet = br.ReadByte();
+              var nU = br.ReadUInt16();
+              var pUnits = new List<int>(nU);
+              for(var j=0;j<nU;j++)
+              {
+                pUnits.Add(br.ReadInt32());
+              }
+              c.Units = new List<UnitBase>(nU);
+              for(var j=0;j<nU;j++)
+              {
+                if (pUnits[j] == 0) continue;
+
+                var u=GetUnitByType( br.ReadByte());
+                c.Units.Add(u);
+                u.BinaryReaderRead(br);
+              }
+            }
+            var nResearches = br.ReadUInt16();
             Console.WriteLine(ms.Position);
           }
         }
@@ -539,6 +573,28 @@ namespace YTY.AocDatLib
       {
         case "VER 5.7":
           return 32;
+      }
+      throw new ArgumentOutOfRangeException();
+    }
+
+    private UnitBase GetUnitByType(byte type)
+    {
+      switch(type)
+      {
+        case 10:
+          return new DecorationUnit();
+        case 20:
+          return new AnimatedUnit();
+        case 25:
+          return new DoppelgangerUnit();
+        case 30:
+          return new MovingUnit();
+        case 60:
+          return new ProjectileUnit();
+        case 70:
+          return new CombatUnit();
+        case 80:
+          return new BuildingUnit();
       }
       throw new ArgumentOutOfRangeException();
     }

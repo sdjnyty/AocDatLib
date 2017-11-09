@@ -20,6 +20,6 @@ namespace YTY.AocDatLib
 
     public byte IconSet { get; set; }
 
-
+    public List<UnitBase> Units { get; internal set; }
   }
 }
