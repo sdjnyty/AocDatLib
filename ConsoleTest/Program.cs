@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Win32;
 
 namespace YTY.AocDatLib
 {
   public static class Program
   {
-    const string DATFILE = @"D:\Hawkaoe\aoc\Data\empires2_x1_p1.dat";
 
     public static void Main(string[] args)
     {
-      var dat = new DatFile(DATFILE);
+     var path=(string)Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft Games\Age of Empires II: The Conquerors Expansion\1.0").GetValue("EXE Path");
+      path = Path.Combine(path, @"data\empires2_x1_p1.dat");
+      var dat = new DatFile(path);
       Console.ReadKey();
     }
   }
