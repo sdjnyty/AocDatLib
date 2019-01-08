@@ -71,7 +71,7 @@ namespace YTY.AocDatLib
     public List<MapHeader> MapHeaders { get; }
     public List<Map> Maps { get; }
     public List<Technology> Technologies { get; }
-    public List<Unit> Units { get; }
+    public List<List<UnitCommand>> UnitCommands { get; }
     public List<Civilization> Civilizations { get; }
 
     public DatFile(string fileName)
@@ -483,19 +483,18 @@ namespace YTY.AocDatLib
               }
             }
             var nUnits = br.ReadInt32();
-            Units = new List<Unit>(nUnits);
+            UnitCommands = new List<List<UnitCommand>>(nUnits);
             for (var i = 0; i < nUnits; i++)
             {
               var exists = br.ReadSByte();
               if (exists == 0) continue;
-              var u = new Unit();
-              Units.Add(u);
               var nCommands = br.ReadUInt16();
-              u.Commands = new List<UnitCommand>(nCommands);
-              for(var j=0;j<nCommands;j++)
+              var u = new List<UnitCommand>(nCommands);
+              UnitCommands.Add(u);
+              for (var j = 0; j < nCommands; j++)
               {
                 var c = new UnitCommand();
-                u.Commands.Add(c);
+                u.Add(c);
                 c.CommandUsed = br.ReadInt16();
                 c.Id = br.ReadInt16();
                 c._unknown1 = br.ReadByte();
@@ -529,7 +528,7 @@ namespace YTY.AocDatLib
             }
             var nCivs = br.ReadUInt16();
             Civilizations = new List<Civilization>(nCivs);
-            for(var i=0;i<nCivs;i++)
+            for (var i = 0; i < nCivs; i++)
             {
               var c = new Civilization();
               Civilizations.Add(c);
@@ -539,23 +538,23 @@ namespace YTY.AocDatLib
               c.TechTreeId = br.ReadInt16();
               c.TeamBonusId = br.ReadInt16();
               c.Resources = new List<float>(nResources);
-              for(var j=0;j<nResources;j++)
+              for (var j = 0; j < nResources; j++)
               {
                 c.Resources.Add(br.ReadSingle());
               }
               c.IconSet = br.ReadByte();
               var nU = br.ReadUInt16();
               var pUnits = new List<int>(nU);
-              for(var j=0;j<nU;j++)
+              for (var j = 0; j < nU; j++)
               {
                 pUnits.Add(br.ReadInt32());
               }
-              c.Units = new List<UnitBase>(nU);
-              for(var j=0;j<nU;j++)
+              c.Units = new List<Unit>(nU);
+              for (var j = 0; j < nU; j++)
               {
                 if (pUnits[j] == 0) continue;
 
-                var u=GetUnitByType( br.ReadByte());
+                var u = new Unit();
                 c.Units.Add(u);
                 u.BinaryReaderRead(br);
               }
@@ -573,28 +572,6 @@ namespace YTY.AocDatLib
       {
         case "VER 5.7":
           return 42;
-      }
-      throw new ArgumentOutOfRangeException();
-    }
-
-    private UnitBase GetUnitByType(byte type)
-    {
-      switch(type)
-      {
-        case 10:
-          return new DecorationUnit();
-        case 20:
-          return new AnimatedUnit();
-        case 25:
-          return new DoppelgangerUnit();
-        case 30:
-          return new MovingUnit();
-        case 60:
-          return new ProjectileUnit();
-        case 70:
-          return new CombatUnit();
-        case 80:
-          return new BuildingUnit();
       }
       throw new ArgumentOutOfRangeException();
     }

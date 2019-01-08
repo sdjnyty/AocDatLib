@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YTY.AocDatLib
 {
-  public struct AtkDefEntry
+  public struct AttackArmor
   {
     public short Id { get; set; }
     public short Amount { get; set; }

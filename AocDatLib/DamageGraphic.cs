@@ -10,7 +10,7 @@ namespace YTY.AocDatLib
   {
     public short GraphicId { get; set; }
     public byte DamagePercent { get; set; }
-    public byte ApplyModeOld { get; set; }
+    public byte OldApplyMode { get; set; }
     public byte ApplyMode { get; set; }
   }
 }
