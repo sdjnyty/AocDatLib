@@ -21,7 +21,7 @@ namespace YTY.AocDatLib
 
     public int SlpId { get; set; }
 
-    internal int Unknown2 { get; set; }
+    internal int ShapePtr { get; set; }
 
     public int SoundId { get; set; }
 
@@ -47,7 +47,7 @@ namespace YTY.AocDatLib
 
     public TerrainFrame[] TileGraphics { get; } = new TerrainFrame[TILEGRAPHICSCOUNT];
 
-    public short ReplacementId { get; set; }
+    public short TerrainToDraw { get; set; }
 
     public short Dimension0 { get; set; }
 

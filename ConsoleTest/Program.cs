@@ -8,8 +8,7 @@ namespace YTY.AocDatLib
 {
   public static class Program
   {
-    const string DATFILE = @"C:\Program Files (x86)\Age of Empires II\DATA\empires2_x1.dat";
-    //const string DATFILE = @"D:\Hawkaoc\aoc\Data\empires2.dat";
+    const string DATFILE = @"D:\Hawkaoe\aoc\Data\empires2_x1_p1.dat";
 
     public static void Main(string[] args)
     {

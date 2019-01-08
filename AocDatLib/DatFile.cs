@@ -252,7 +252,7 @@ namespace YTY.AocDatLib
               t.Name0 = br.ReadChars(13);
               t.Name1 = br.ReadChars(13);
               t.SlpId = br.ReadInt32();
-              t.Unknown2 = br.ReadInt32();
+              t.ShapePtr = br.ReadInt32();
               t.SoundId = br.ReadInt32();
               t.BlendPriority = br.ReadInt32();
               t.BlendMode = br.ReadInt32();
@@ -270,7 +270,7 @@ namespace YTY.AocDatLib
                 t.TileGraphics[j] = tf;
                 tf.BinaryReaderRead(br);
               }
-              t.ReplacementId = br.ReadInt16();
+              t.TerrainToDraw = br.ReadInt16();
               t.Dimension0 = br.ReadInt16();
               t.Dimension1 = br.ReadInt16();
               t.Borders = new short[GetTerrainCount()];
@@ -572,7 +572,7 @@ namespace YTY.AocDatLib
       switch (new string(_version).Trim('\0'))
       {
         case "VER 5.7":
-          return 32;
+          return 42;
       }
       throw new ArgumentOutOfRangeException();
     }
