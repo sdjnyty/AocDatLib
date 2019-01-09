@@ -8,7 +8,7 @@ namespace YTY.AocDatLib
 {
   public class Technology
   {
-    public char[] Name { get; internal set; }
-    public List<Effect> Effects { get; internal set; }
+    public byte[] Name { get;  set; }
+    public List<Effect> Effects { get;  set; }
   }
 }

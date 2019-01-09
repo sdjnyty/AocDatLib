@@ -195,6 +195,7 @@ namespace YTY.AocDatLib
     public float GarrisonHealRate { get; set; }
     public float GarrisonRepairRate { get; set; }
     public short PileUnit { get; set; }
+    [System.Xml.Serialization.XmlIgnore]
     public byte[] LootingTable { get; set; }
 
     protected internal void BinaryReaderRead(System.IO.BinaryReader br)

@@ -1,21 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO.Compression;
 using System.IO;
-using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using ExtendedXmlSerializer.Configuration;
+using ExtendedXmlSerializer.ExtensionModel.Xml;
+using ExtendedXmlSerializer.ContentModel.Conversion;
+using ExtendedXmlSerializer.ExtensionModel.Content;
 
 namespace YTY.AocDatLib
 {
+  [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
   public class DatFile
   {
+    private static readonly JsonSerializerSettings _jss = new JsonSerializerSettings
+    {
+      Formatting = Newtonsoft.Json.Formatting.Indented,
+      Converters =
+      {
+         new ByteArrayJsonConverter(),
+      },
+    };
+
+    private static readonly IConverter<byte[]> _byteArrayConverter = new Converter<byte[]>(null,
+      bytes => Encoding.ASCII.GetString(bytes).TrimEnd('\0'));
+
+    private static readonly IExtendedXmlSerializer _s = new ConfigurationContainer()
+      .UseOptimizedNamespaces()
+      .Register(_byteArrayConverter)
+      .Create();
+
+    private static readonly XmlWriterSettings _xws = new XmlWriterSettings
+    {
+      Indent = true,
+    };
+
     public const int TerrainBorderCount = 16;
 
-    private char[] _version;
+    private byte[] _version;
 
+    [XmlIgnore]
     public List<TerrainRestriction> TerrainRestrictions { get; private set; }
+
+    [XmlIgnore]
 
     public List<PlayerColor> PlayerColors { get; private set; }
 
@@ -31,48 +61,103 @@ namespace YTY.AocDatLib
     private int _worldHeight;
 
     private const int TILESIZECOUNT = 19;
+
+    [XmlIgnore]
+
     public TileSize[] TileSizes => new TileSize[TILESIZECOUNT];
 
     private short _unknown2;
 
-    public Terrain[] Terrains { get; private set; }
+    [XmlIgnore]
+
+    public Terrain[] Terrains { get; set; }
+    [XmlIgnore]
 
     public TerrainBorder[] TerrainBorders { get; } = new TerrainBorder[TerrainBorderCount];
 
     private int _unknown3;
+    [XmlIgnore]
 
     public float MapMinX { get; set; }
+    [XmlIgnore]
     public float MapMinY { get; set; }
+    [XmlIgnore]
     public float MapMaxX { get; set; }
+    [XmlIgnore]
     public float MapMaxY { get; set; }
+    [XmlIgnore]
     public float MapMaxXPlus1 { get; set; }
+    [XmlIgnore]
     public float MapMaxYPlus1 { get; set; }
+    [XmlIgnore]
     public ushort TerrainCountAdditional { get; set; }
+    [XmlIgnore]
     public ushort BordersUsed { get; set; }
+    [XmlIgnore]
     public short MaxTerrain { get; set; }
+    [XmlIgnore]
     public short TileWidth { get; set; }
+    [XmlIgnore]
     public short TileHeight { get; set; }
+    [XmlIgnore]
     public short TileHalfHeight { get; set; }
+    [XmlIgnore]
     public short TileHalfWidth { get; set; }
+    [XmlIgnore]
     public short ElevHeight { get; set; }
+    [XmlIgnore]
     public short CurrentRow { get; set; }
+    [XmlIgnore]
     public short CurrentColumn { get; set; }
+    [XmlIgnore]
     public short BlockBeginRow { get; set; }
+    [XmlIgnore]
     public short BlockEndRow { get; set; }
+    [XmlIgnore]
     public short BlockBeginColumn { get; set; }
+    [XmlIgnore]
     public short BlockEndColumn { get; set; }
     internal uint _unknown4;
     internal uint _unknown5;
+    [XmlIgnore]
     public sbyte AnyFrameChange { get; set; }
+    [XmlIgnore]
     public sbyte MapVisibleFlag { get; set; }
+    [XmlIgnore]
     public sbyte FogFlag { get; set; }
     internal byte[] TerrainBlob0 { get; set; }
     internal uint[] TerrainBlob1 { get; set; }
+    [XmlIgnore]
     public List<MapHeader> MapHeaders { get; }
+    [XmlIgnore]
     public List<Map> Maps { get; }
+    [JsonProperty]
     public List<Technology> Technologies { get; }
+    [JsonProperty]
     public List<List<UnitCommand>> UnitCommands { get; }
+    [JsonProperty]
     public List<Civilization> Civilizations { get; }
+    [JsonProperty]
+    public List<Research> Researches { get; }
+    [XmlIgnore]
+    public int TimeSlice { get; set; }
+    [XmlIgnore]
+    public int UnitKillRate { get; set; }
+    [XmlIgnore]
+    public int UnitKillTotal { get; set; }
+    [XmlIgnore]
+    public int UnitHitPointRate { get; set; }
+    [XmlIgnore]
+    public int UnitHitPointTotal { get; set; }
+    [XmlIgnore]
+    public int RazingKillRate { get; set; }
+    [XmlIgnore]
+    public int RazingKillTotal { get; set; }
+
+    public DatFile()
+    {
+
+    }
 
     public DatFile(string fileName)
     {
@@ -84,7 +169,7 @@ namespace YTY.AocDatLib
           ms.Seek(0, SeekOrigin.Begin);
           using (var br = new BinaryReader(ms, Encoding.ASCII))
           {
-            _version = br.ReadChars(8);
+            _version = br.ReadBytes(8);
             var nTerrainRestrictions = br.ReadUInt16();
             var nTerrains = br.ReadUInt16();
             var pTerrainRestrictions0 = new int[nTerrainRestrictions];
@@ -149,7 +234,7 @@ namespace YTY.AocDatLib
               {
                 var it = new SoundItem();
                 s.Items.Add(it);
-                it.FileName = br.ReadChars(13);
+                it.FileName = br.ReadBytes(13);
                 it.Id = br.ReadInt32();
                 it.Probability = br.ReadInt16();
                 it.Civilization = br.ReadInt16();
@@ -171,8 +256,8 @@ namespace YTY.AocDatLib
               }
               var g = new Graphic();
               Graphics.Add(g);
-              g.Name0 = br.ReadChars(21);
-              g.Name1 = br.ReadChars(13);
+              g.Name0 = br.ReadBytes(21);
+              g.Name1 = br.ReadBytes(13);
               g.SlpId = br.ReadInt32();
               g.Unknown1 = br.ReadSByte();
               g.Unknown2 = br.ReadSByte();
@@ -194,7 +279,6 @@ namespace YTY.AocDatLib
               g.ReplayDelay = br.ReadSingle();
               g.SequenceKind = br.ReadSByte();
               g.Id = br.ReadInt16();
-              Debug.Assert(g.Id == i);
               g.MirroringMode = br.ReadSByte();
               g.Unknown3 = br.ReadByte();
               g.Deltas = new List<GraphicDelta>(nDeltas);
@@ -249,8 +333,8 @@ namespace YTY.AocDatLib
               Terrains[i] = t;
               t.Enabled = br.ReadSByte();
               t.Unknown1 = br.ReadSByte();
-              t.Name0 = br.ReadChars(13);
-              t.Name1 = br.ReadChars(13);
+              t.Name0 = br.ReadBytes(13);
+              t.Name1 = br.ReadBytes(13);
               t.SlpId = br.ReadInt32();
               t.ShapePtr = br.ReadInt32();
               t.SoundId = br.ReadInt32();
@@ -299,8 +383,8 @@ namespace YTY.AocDatLib
               TerrainBorders[i] = b;
               b.IsEnabled = br.ReadSByte();
               b.Unknown1 = br.ReadSByte();
-              b.Name0 = br.ReadChars(13);
-              b.Name1 = br.ReadChars(13);
+              b.Name0 = br.ReadBytes(13);
+              b.Name1 = br.ReadBytes(13);
               b.SlpId = br.ReadInt32();
               b.Unknown2 = br.ReadInt32();
               b.SoundId = br.ReadInt32();
@@ -468,7 +552,7 @@ namespace YTY.AocDatLib
             {
               var t = new Technology();
               Technologies.Add(t);
-              t.Name = br.ReadChars(31);
+              t.Name = br.ReadBytes(31);
               var nEffects = br.ReadUInt16();
               t.Effects = new List<Effect>(nEffects);
               for (var j = 0; j < nEffects; j++)
@@ -532,8 +616,8 @@ namespace YTY.AocDatLib
             {
               var c = new Civilization();
               Civilizations.Add(c);
-              c.Enabled = br.ReadByte();
-              c.Name = br.ReadChars(20);
+              c.PlayerType = br.ReadByte();
+              c.Name = br.ReadBytes(20);
               var nResources = br.ReadUInt16();
               c.TechTreeId = br.ReadInt16();
               c.TeamBonusId = br.ReadInt16();
@@ -560,20 +644,58 @@ namespace YTY.AocDatLib
               }
             }
             var nResearches = br.ReadUInt16();
+            Researches = new List<Research>(nResearches);
+            for (var i = 0; i < nResearches; i++)
+            {
+              var research = new Research();
+              Researches.Add(research);
+              research.BinaryReaderRead(br);
+            }
             Console.WriteLine(ms.Position);
           }
         }
       }
     }
 
+    public string ToJson()
+    {
+      return JsonConvert.SerializeObject(this, _jss);
+    }
+
+    public string ToXml(Stream stream)
+    {
+      return _s.Serialize(_xws,stream,this);
+    }
+
     private int GetTerrainCount()
     {
-      switch (new string(_version).Trim('\0'))
+      switch (Encoding.ASCII.GetString(_version).Trim('\0'))
       {
         case "VER 5.7":
           return 42;
       }
       throw new ArgumentOutOfRangeException();
     }
+
+    private class ByteArrayJsonConverter : JsonConverter
+    {
+      public override bool CanConvert(Type objectType)
+      {
+        return objectType == typeof(byte[]);
+      }
+
+      public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+      {
+        throw new NotImplementedException();
+      }
+
+      public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+      {
+        var bytes = (byte[])value;
+        serializer.Serialize(writer, Encoding.ASCII.GetString(bytes).TrimEnd('\0'));
+      }
+    }
+
+
   }
 }

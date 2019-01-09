@@ -8,7 +8,7 @@ namespace YTY.AocDatLib
 {
   public class SoundItem
   {
-    public char[] FileName { get; set; }
+    public byte[] FileName { get; set; }
 
     public int Id { get; set; }
 

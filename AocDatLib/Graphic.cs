@@ -8,9 +8,9 @@ namespace YTY.AocDatLib
 {
   public class Graphic
   {
-    public char[] Name0 { get; set; }
+    public byte[] Name0 { get; set; }
 
-    public char[] Name1 { get; set; }
+    public byte[] Name1 { get; set; }
 
     public int SlpId { get; set; }
 
