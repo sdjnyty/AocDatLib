@@ -501,7 +501,11 @@ namespace YTY.AocDatLib
             for (var i = 0; i < nUnits; i++)
             {
               var exists = br.ReadSByte();
-              if (exists == 0) continue;
+              if (exists == 0)
+              {
+                                UnitCommands.Add(new List<UnitCommand>());
+                                continue;
+              }
               var nCommands = br.ReadUInt16();
               var u = new List<UnitCommand>(nCommands);
               UnitCommands.Add(u);
