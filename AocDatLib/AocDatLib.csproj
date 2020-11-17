@@ -1,85 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2323E0A6-0C17-4B56-9462-A07738E9746B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>YTY.AocDatLib</RootNamespace>
-    <AssemblyName>AocDatLib</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup />
-  <ItemGroup>
-    <Reference Include="ExtendedXmlSerializer, Version=2.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExtendedXmlSerializer.2.1.15\lib\net45\ExtendedXmlSerializer.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.4.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Interactive, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Interactive.3.1.1\lib\net45\System.Interactive.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AttackArmor.cs" />
-    <Compile Include="BaseZone.cs" />
-    <Compile Include="Civilization.cs" />
-    <Compile Include="DamageGraphic.cs" />
-    <Compile Include="DatFile.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="Graphic.cs" />
-    <Compile Include="GraphicAttackSound.cs" />
-    <Compile Include="GraphicDelta.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapElevation.cs" />
-    <Compile Include="MapHeader.cs" />
-    <Compile Include="MapTerrain.cs" />
-    <Compile Include="MapUnit.cs" />
-    <Compile Include="PlayerColor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Research.cs" />
-    <Compile Include="Sound.cs" />
-    <Compile Include="SoundItem.cs" />
-    <Compile Include="Technology.cs" />
-    <Compile Include="Terrain.cs" />
-    <Compile Include="TerrainAnimation.cs" />
-    <Compile Include="TerrainBorder.cs" />
-    <Compile Include="TerrainFrame.cs" />
-    <Compile Include="TerrainPassGraphic.cs" />
-    <Compile Include="TerrainRestriction.cs" />
-    <Compile Include="TileSize.cs" />
-    <Compile Include="Unit.cs" />
-    <Compile Include="UnitCommand.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
+
 </Project>

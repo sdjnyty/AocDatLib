@@ -3,49 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO.Compression;
 using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-using ExtendedXmlSerializer.Configuration;
-using ExtendedXmlSerializer.ExtensionModel.Xml;
-using ExtendedXmlSerializer.ContentModel.Conversion;
-using ExtendedXmlSerializer.ExtensionModel.Content;
 
 namespace YTY.AocDatLib
 {
-  [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
   public class DatFile
   {
-    private static readonly JsonSerializerSettings _jss = new JsonSerializerSettings
-    {
-      Formatting = Newtonsoft.Json.Formatting.Indented,
-      Converters =
-      {
-         new ByteArrayJsonConverter(),
-      },
-    };
-
-    private static readonly IConverter<byte[]> _byteArrayConverter = new Converter<byte[]>(null,
-      bytes => Encoding.ASCII.GetString(bytes).TrimEnd('\0'));
-
-    private static readonly IExtendedXmlSerializer _s = new ConfigurationContainer()
-      .UseOptimizedNamespaces()
-      .Register(_byteArrayConverter)
-      .Create();
-
-    private static readonly XmlWriterSettings _xws = new XmlWriterSettings
-    {
-      Indent = true,
-    };
 
     public const int TerrainBorderCount = 16;
 
     private byte[] _version;
 
-    [XmlIgnore]
     public List<TerrainRestriction> TerrainRestrictions { get; private set; }
 
-    [XmlIgnore]
 
     public List<PlayerColor> PlayerColors { get; private set; }
 
@@ -62,96 +31,57 @@ namespace YTY.AocDatLib
 
     private const int TILESIZECOUNT = 19;
 
-    [XmlIgnore]
 
     public TileSize[] TileSizes => new TileSize[TILESIZECOUNT];
 
     private short _unknown2;
 
-    [XmlIgnore]
 
     public Terrain[] Terrains { get; set; }
-    [XmlIgnore]
 
     public TerrainBorder[] TerrainBorders { get; } = new TerrainBorder[TerrainBorderCount];
 
     private int _unknown3;
-    [XmlIgnore]
 
     public float MapMinX { get; set; }
-    [XmlIgnore]
     public float MapMinY { get; set; }
-    [XmlIgnore]
     public float MapMaxX { get; set; }
-    [XmlIgnore]
     public float MapMaxY { get; set; }
-    [XmlIgnore]
     public float MapMaxXPlus1 { get; set; }
-    [XmlIgnore]
     public float MapMaxYPlus1 { get; set; }
-    [XmlIgnore]
     public ushort TerrainCountAdditional { get; set; }
-    [XmlIgnore]
     public ushort BordersUsed { get; set; }
-    [XmlIgnore]
     public short MaxTerrain { get; set; }
-    [XmlIgnore]
     public short TileWidth { get; set; }
-    [XmlIgnore]
     public short TileHeight { get; set; }
-    [XmlIgnore]
     public short TileHalfHeight { get; set; }
-    [XmlIgnore]
     public short TileHalfWidth { get; set; }
-    [XmlIgnore]
     public short ElevHeight { get; set; }
-    [XmlIgnore]
     public short CurrentRow { get; set; }
-    [XmlIgnore]
     public short CurrentColumn { get; set; }
-    [XmlIgnore]
     public short BlockBeginRow { get; set; }
-    [XmlIgnore]
     public short BlockEndRow { get; set; }
-    [XmlIgnore]
     public short BlockBeginColumn { get; set; }
-    [XmlIgnore]
     public short BlockEndColumn { get; set; }
     internal uint _unknown4;
     internal uint _unknown5;
-    [XmlIgnore]
     public sbyte AnyFrameChange { get; set; }
-    [XmlIgnore]
     public sbyte MapVisibleFlag { get; set; }
-    [XmlIgnore]
     public sbyte FogFlag { get; set; }
     internal byte[] TerrainBlob0 { get; set; }
     internal uint[] TerrainBlob1 { get; set; }
-    [XmlIgnore]
     public List<MapHeader> MapHeaders { get; }
-    [XmlIgnore]
     public List<Map> Maps { get; }
-    [JsonProperty]
     public List<Technology> Technologies { get; }
-    [JsonProperty]
     public List<List<UnitCommand>> UnitCommands { get; }
-    [JsonProperty]
     public List<Civilization> Civilizations { get; }
-    [JsonProperty]
     public List<Research> Researches { get; }
-    [XmlIgnore]
     public int TimeSlice { get; set; }
-    [XmlIgnore]
     public int UnitKillRate { get; set; }
-    [XmlIgnore]
     public int UnitKillTotal { get; set; }
-    [XmlIgnore]
     public int UnitHitPointRate { get; set; }
-    [XmlIgnore]
     public int UnitHitPointTotal { get; set; }
-    [XmlIgnore]
     public int RazingKillRate { get; set; }
-    [XmlIgnore]
     public int RazingKillTotal { get; set; }
 
     public DatFile()
@@ -657,16 +587,6 @@ namespace YTY.AocDatLib
       }
     }
 
-    public string ToJson()
-    {
-      return JsonConvert.SerializeObject(this, _jss);
-    }
-
-    public string ToXml(Stream stream)
-    {
-      return _s.Serialize(_xws,stream,this);
-    }
-
     private int GetTerrainCount()
     {
       switch (Encoding.ASCII.GetString(_version).Trim('\0'))
@@ -676,26 +596,6 @@ namespace YTY.AocDatLib
       }
       throw new ArgumentOutOfRangeException();
     }
-
-    private class ByteArrayJsonConverter : JsonConverter
-    {
-      public override bool CanConvert(Type objectType)
-      {
-        return objectType == typeof(byte[]);
-      }
-
-      public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-      {
-        throw new NotImplementedException();
-      }
-
-      public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-      {
-        var bytes = (byte[])value;
-        serializer.Serialize(writer, Encoding.ASCII.GetString(bytes).TrimEnd('\0'));
-      }
-    }
-
 
   }
 }
