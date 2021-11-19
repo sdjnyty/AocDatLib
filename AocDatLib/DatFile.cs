@@ -70,12 +70,12 @@ namespace YTY.AocDatLib
     public sbyte FogFlag { get; set; }
     internal byte[] TerrainBlob0 { get; set; }
     internal uint[] TerrainBlob1 { get; set; }
-    public List<MapHeader> MapHeaders { get; }
-    public List<Map> Maps { get; }
-    public List<Technology> Technologies { get; }
-    public List<List<UnitCommand>> UnitCommands { get; }
-    public List<Civilization> Civilizations { get; }
-    public List<Research> Researches { get; }
+    public List<MapHeader> MapHeaders { get; set; }
+    public List<Map> Maps { get; set; }
+    public List<Technology> Technologies { get; set; }
+    public List<List<UnitCommand>> UnitCommands { get; set;  }
+    public List<Civilization> Civilizations { get; set;  }
+    public List<Research> Researches { get; set;  }
     public int TimeSlice { get; set; }
     public int UnitKillRate { get; set; }
     public int UnitKillTotal { get; set; }
@@ -89,7 +89,7 @@ namespace YTY.AocDatLib
 
     }
 
-    public DatFile(string fileName)
+    public void Load(string fileName)
     {
       using (var ds = new DeflateStream(new FileStream(fileName, FileMode.Open), CompressionMode.Decompress))
       {
